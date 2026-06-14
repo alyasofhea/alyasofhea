@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Alya Sofhea — Mobile App Dev e-Portfolio</title>
+<style>
+  /* ── Tokens ── */
+  :root {
+    --teal:      #c0446a;
+    --teal-light:#e87fa3;
+    --teal-pale: #fde8f0;
+    --ink:       #2a0f1a;
+    --mid:       #7a4560;
+    --dust:      #fdf3f7;
+    --white:     #ffffff;
+    --card-r:    16px;
+    --nav-h:     64px;
+    --font-head: 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'Courier New', monospace;
+    --shadow:    0 4px 24px rgba(192,68,106,.10);
+  }
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); }
+  body { font-family: var(--font-body); color: var(--ink); background: var(--white); line-height: 1.65; }
+  img  { max-width: 100%; display: block; }
+  a    { color: var(--teal); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Nav ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    height: var(--nav-h);
+    background: var(--ink);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 clamp(1rem, 5vw, 3rem);
+    box-shadow: 0 2px 12px rgba(0,0,0,.3);
+  }
+  .nav-brand {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    color: var(--teal-light);
+    letter-spacing: .02em;
+    white-space: nowrap;
+  }
+  .nav-links { display: flex; gap: clamp(.75rem, 2vw, 1.75rem); list-style: none; flex-wrap: wrap; }
+  .nav-links a {
+    color: rgba(255,255,255,.75);
+    font-size: .875rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--teal-light); text-decoration: none; }
+
+  /* ── Hero ── */
+  #home {
+    min-height: 92vh;
+    background: linear-gradient(145deg, var(--ink) 0%, #3d1728 60%, var(--teal) 100%);
+    display: grid; place-items: center;
+    text-align: center;
+    padding: 4rem 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  #home::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 110%, rgba(192,68,106,.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; max-width: 720px; }
+  .hero-eyebrow {
+    display: inline-block;
+    background: var(--teal);
+    color: var(--white);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: .35rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .hero-name {
+    font-family: var(--font-head);
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: .75rem;
+  }
+  .hero-name span { color: var(--teal-light); }
+  .hero-sub {
+    font-size: clamp(.95rem, 2vw, 1.15rem);
+    color: rgba(255,255,255,.65);
+    max-width: 520px;
+    margin: 0 auto 2rem;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: .75rem;
+    justify-content: center;
+  }
+  .pill {
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.15);
+    color: rgba(255,255,255,.85);
+    border-radius: 100px;
+    padding: .35rem 1rem;
+    font-size: .82rem;
+    font-weight: 500;
+  }
+  .sdg-badge {
+    margin-top: 2rem;
+    display: inline-flex; align-items: center; gap: .6rem;
+    background: rgba(192,68,106,.18);
+    border: 1px solid rgba(192,68,106,.4);
+    border-radius: var(--card-r);
+    padding: .6rem 1.2rem;
+    color: var(--teal-light);
+    font-size: .9rem;
+    font-weight: 600;
+  }
+  .sdg-badge .sdg-icon { font-size: 1.4rem; }
+
+  /* ── Section shell ── */
+  section { padding: 5rem clamp(1rem, 6vw, 4rem); }
+  section:nth-child(even) { background: var(--dust); }
+  .section-label {
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: .5rem;
+  }
+  .section-title {
+    font-family: var(--font-head);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    color: var(--ink);
+    margin-bottom: 2.5rem;
+    max-width: 600px;
+  }
+
+  /* ── Grid ── */
+  .grid { display: grid; gap: 1.75rem; }
+  .grid-2 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+  .grid-3 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); }
+
+  /* ── Card ── */
+  .card {
+    background: var(--white);
+    border-radius: var(--card-r);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    border: 1px solid rgba(192,68,106,.08);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 8px 36px rgba(192,68,106,.16); }
+  .card-video { position: relative; padding-top: 56.25%; background: var(--ink); }
+  .card-video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+  .card-body { padding: 1.4rem 1.5rem 1.6rem; flex: 1; display: flex; flex-direction: column; gap: .6rem; }
+  .card-num {
+    font-family: var(--font-mono);
+    font-size: .72rem;
+    color: var(--teal);
+    font-weight: 700;
+    letter-spacing: .1em;
+  }
+  .card-title {
+    font-family: var(--font-head);
+    font-size: 1.15rem;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .card-desc { font-size: .9rem; color: var(--mid); }
+  .card-reflection {
+    margin-top: auto;
+    padding-top: .9rem;
+    border-top: 1px solid rgba(192,68,106,.1);
+    font-size: .85rem;
+    color: var(--mid);
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .card-reflection::before { content: '💭 '; font-style: normal; }
+
+  /* ── Buttons ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: .45rem;
+    padding: .55rem 1.2rem;
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background .2s, transform .15s;
+    text-decoration: none;
+  }
+  .btn:hover { transform: translateY(-1px); text-decoration: none; }
+  .btn-primary { background: var(--teal); color: var(--white); }
+  .btn-primary:hover { background: var(--teal-light); }
+  .btn-outline { background: transparent; color: var(--teal); border: 2px solid var(--teal); }
+  .btn-outline:hover { background: var(--teal-pale); }
+  .card-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: .75rem; }
+
+  /* ── Project card extras ── */
+  .problem-box {
+    background: var(--teal-pale);
+    border-left: 3px solid var(--teal);
+    border-radius: 0 8px 8px 0;
+    padding: .7rem 1rem;
+    font-size: .85rem;
+    color: var(--ink);
+  }
+  .problem-box strong { color: var(--teal); display: block; margin-bottom: .25rem; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+
+  /* ── Skills ── */
+  .skills-wrap { display: flex; flex-wrap: wrap; gap: .65rem; }
+  .skill-tag {
+    background: var(--teal-pale);
+    border: 1px solid rgba(192,68,106,.2);
+    color: var(--teal);
+    border-radius: 8px;
+    padding: .4rem .9rem;
+    font-size: .82rem;
+    font-weight: 600;
+  }
+
+  /* ── Reflection ── */
+  .reflection-block {
+    background: var(--ink);
+    color: rgba(255,255,255,.85);
+    border-radius: var(--card-r);
+    padding: 2.5rem;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    font-family: var(--font-head);
+    font-style: italic;
+    max-width: 760px;
+    position: relative;
+  }
+  .reflection-block::before {
+    content: '\201C';
+    font-size: 6rem;
+    color: var(--teal);
+    opacity: .35;
+    position: absolute;
+    top: -.5rem;
+    left: 1.2rem;
+    line-height: 1;
+    font-family: Georgia, serif;
+  }
+
+  /* ── Resources ── */
+  .resource-list { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+  .resource-list li {
+    display: flex; align-items: flex-start; gap: .75rem;
+    padding: .9rem 1.1rem;
+    background: var(--white);
+    border-radius: 10px;
+    border: 1px solid rgba(192,68,106,.1);
+    font-size: .9rem;
+  }
+  .resource-list li::before { content: '→'; color: var(--teal); font-weight: 700; flex-shrink: 0; margin-top: .05rem; }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--ink);
+    color: rgba(255,255,255,.5);
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    font-size: .82rem;
+    line-height: 2;
+  }
+  footer strong { color: var(--teal-light); }
+
+  /* ── Responsive nav collapse ── */
+  @media (max-width: 600px) {
+    nav { flex-direction: column; height: auto; padding: .75rem 1rem; gap: .5rem; }
+    .nav-links { justify-content: center; }
+    html { scroll-padding-top: 100px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ NAV ══════════ -->
+<nav aria-label="Primary navigation">
+  <span class="nav-brand">Alya Sofhea</span>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#labs">Labs</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#reflection">Reflection</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#resources">Resources</a></li>
+  </ul>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="home" aria-label="Introduction">
+  <div class="hero-inner">
+    <span class="hero-eyebrow">Mobile Application Development · 2025</span>
+    <h1 class="hero-name">Wan Nur <span>Alya Sofhea</span></h1>
+    <p class="hero-sub">
+      I'm a final-year Software Engineering student passionate about building meaningful mobile experiences. This portfolio documents my journey from first layouts to a full-stack wellness app — every screen a lesson, every bug a teacher.
+    </p>
+    <div class="hero-meta">
+      <span class="pill">A211867</span>
+      <span class="pill">Software Engineering</span>
+      <span class="pill">Dr Nazatul Aini</span>
+    </div>
+    <div class="sdg-badge">
+      <span class="sdg-icon">🌸</span>
+      SDG 3 — Good Health &amp; Well-Being · <em>Sanvello</em>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ LABS ══════════ -->
+<section id="labs">
+  <p class="section-label">Practical Work</p>
+  <h2 class="section-title">Lab Exercises</h2>
+  <div class="grid grid-2">
+
+    <!-- Lab 1 -->
+    <article class="card" aria-label="Lab 1 – UI Basics">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/IfbTziDweRc"
+          title="Lab 1 – UI Basics demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">LAB 01</span>
+        <h3 class="card-title">UI Fundamentals</h3>
+        <p class="card-desc">Building the first Jetpack Compose screens — exploring layouts, colours, and the Compose declarative paradigm from scratch.</p>
+        <p class="card-reflection">This lab taught me that UI in Compose is data-driven, not view-based. Struggling with Column/Row alignment actually deepened my understanding of how the system measures children. I left with a solid mental model I kept reaching for in every lab after.</p>
+      </div>
+    </article>
+
+    <!-- Lab 2 -->
+    <article class="card" aria-label="Lab 2 – Interaction">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/gZq0QYkio0g"
+          title="Lab 2 – Interaction demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">LAB 02</span>
+        <h3 class="card-title">User Interaction</h3>
+        <p class="card-desc">Adding state, click handlers, and basic animations to make screens feel alive and responsive to user input.</p>
+        <p class="card-reflection">Managing state correctly was the hardest part — I kept triggering unnecessary recompositions until I understood remember and mutableStateOf properly. Once it clicked, building interactive UI felt genuinely fun. This lab changed how I think about reactivity.</p>
+      </div>
+    </article>
+
+    <!-- Lab 3 -->
+    <article class="card" aria-label="Lab 3 – Material Design">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/wrfZbRJH56c"
+          title="Lab 3 – Material Design demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">LAB 03</span>
+        <h3 class="card-title">Material Design 3</h3>
+        <p class="card-desc">Applying Material You theming — dynamic colour schemes, typography scales, and component variants for a cohesive visual system.</p>
+        <p class="card-reflection">Material Design 3 is far more flexible than I expected — the colour-role system (primary, secondary, tertiary) means your whole app adapts with one palette change. Applying it to Sanvello's calming green theme felt natural and intentional rather than arbitrary. I now design with roles, not raw hex values.</p>
+      </div>
+    </article>
+
+    <!-- Lab 4 -->
+    <article class="card" aria-label="Lab 4 – Navigation">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/5eFBPDVFBQk"
+          title="Lab 4 – Navigation demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">LAB 04</span>
+        <h3 class="card-title">Navigation Component</h3>
+        <p class="card-desc">Wiring up multi-screen flows using Jetpack Navigation — back-stack management, argument passing, and deep links.</p>
+        <p class="card-reflection">Navigation graphs made me think about app architecture differently — screens are destinations, not activities. Getting argument passing right between screens was tricky, but once I did, the whole app felt coherent. This lab directly shaped how I structured both projects.</p>
+      </div>
+    </article>
+
+    <!-- Lab 5 -->
+    <article class="card" aria-label="Lab 5 – Room Database">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/5rBoYrkUIgg"
+          title="Lab 5 – Room Database demo video"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">LAB 05</span>
+        <h3 class="card-title">Room Local Database</h3>
+        <p class="card-desc">Persisting data locally with Room — defining entities, DAOs, and observing Flow-based queries from the ViewModel layer.</p>
+        <p class="card-reflection">Room's annotation-based approach felt magical until I understood what it generates under the hood. Connecting a Flow query to a Compose UI so the list re-renders automatically on data change was a genuinely satisfying moment. This lab completed the MVVM picture for me end-to-end.</p>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════ PROJECTS ══════════ -->
+<section id="projects">
+  <p class="section-label">Assessed Work</p>
+  <h2 class="section-title">Projects</h2>
+  <div class="grid grid-2">
+
+    <!-- Project 1 -->
+    <article class="card" aria-label="Project 1 – Sanvello">
+      <div class="card-video">
+        <iframe
+          src="https://www.youtube.com/embed/6a1sRtdcWUM"
+          title="Project 1 – Sanvello video showcase report"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="card-body">
+        <span class="card-num">PROJECT 01 · Lab 4 + Working Features</span>
+        <h3 class="card-title">Sanvello — Mental Wellness Companion</h3>
+        <div class="problem-box">
+          <strong>Problem Statement</strong>
+          Many students struggle with daily stress and emotional burnout without a private, accessible outlet. Sanvello provides a calm digital space to log moods, set daily intentions, and read uplifting quotes — entirely on-device.
+        </div>
+        <p class="card-desc">Multi-screen navigation, mood logging, daily goal setting, and a profile screen — all wired through Jetpack Navigation with a Material 3 green wellness theme.</p>
+        <p class="card-reflection">Building a full navigable app for the first time revealed how important architecture decisions made early on either help or haunt you later. I learnt to design my NavGraph before writing a single screen. Seeing a real app I could show friends made every late night worth it.</p>
+        <div class="card-actions">
+          <a class="btn btn-outline" href="https://github.com/alyasofhea/A211867_ALYASOFHEA_DRNAZATUL_PROJECT1" target="_blank" rel="noopener noreferrer">
+            ⭐ View on GitHub
+          </a>
+        </div>
+      </div>
+    </article>
+
+    <!-- Project 2 -->
+    <article class="card" aria-label="Project 2 – Sanvello 2.0">
+      <div class="card-video" style="background:#0f2522;display:flex;align-items:center;justify-content:center;min-height:220px;">
+        <p style="color:rgba(255,255,255,.4);font-size:.85rem;padding:1rem;text-align:center;">Video coming soon</p>
+      </div>
+      <div class="card-body">
+        <span class="card-num">PROJECT 02 · Lab 5 + API + Sensors + Cloud</span>
+        <h3 class="card-title">Sanvello 2.0 — Full-Stack Wellness App</h3>
+        <div class="problem-box">
+          <strong>Problem Statement</strong>
+          Mental wellness tools often feel disconnected from real daily behaviour. Sanvello 2.0 bridges that gap by combining local mood tracking (Room), real-time motivational quotes (ZenQuotes API), step counting (hardware pedometer sensor), and a shared community board (Firebase Firestore) — all in one app.
+        </div>
+        <p class="card-desc">Extends Project 1 with Room persistence, a ZenQuotes REST API integration via Retrofit, a hardware step-counter sensor, and Firebase Firestore for a live community board.</p>
+        <p class="card-reflection">Integrating four distinct data sources — local DB, a REST API, a hardware sensor, and a cloud database — in a single ViewModel layer taught me how important separation of concerns truly is. Firebase's real-time listener felt like a superpower once it updated the UI automatically. This project is the most technically complex thing I have ever built.</p>
+        <div class="card-actions">
+          <a class="btn btn-outline" href="https://github.com/alyasofhea" target="_blank" rel="noopener noreferrer">
+            ⭐ View on GitHub
+          </a>
+        </div>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<!-- ══════════ REFLECTION ══════════ -->
+<section id="reflection">
+  <p class="section-label">Learning Journey</p>
+  <h2 class="section-title">Looking Back</h2>
+  <div class="reflection-block" role="blockquote">
+    When I started this module I thought mobile development meant drawing pretty screens. By the end I understood it means designing data flows, managing state across layers, and making architecture decisions that ripple through every line of code you write. Each lab built deliberately on the last — Compose layout, then state, then theming, then navigation, then persistence — and that scaffolding made the projects feel achievable rather than overwhelming. The hardest moments, a ClassCastException at runtime, a sensor that never fired, a Firestore rule that blocked every write, turned out to be the most educational ones because they forced me to actually read documentation rather than copy examples. I leave this module not just able to build Android apps, but able to read an error, form a hypothesis, and debug systematically — and that skill will outlast any specific API.
+  </div>
+</section>
+
+<!-- ══════════ SKILLS ══════════ -->
+<section id="skills">
+  <p class="section-label">Tech Stack</p>
+  <h2 class="section-title">Skills &amp; Tools</h2>
+  <div class="skills-wrap" role="list" aria-label="Skills and technologies">
+    <span class="skill-tag" role="listitem">Kotlin</span>
+    <span class="skill-tag" role="listitem">Jetpack Compose</span>
+    <span class="skill-tag" role="listitem">Material Design 3</span>
+    <span class="skill-tag" role="listitem">Jetpack Navigation</span>
+    <span class="skill-tag" role="listitem">Room Database</span>
+    <span class="skill-tag" role="listitem">ViewModel + StateFlow</span>
+    <span class="skill-tag" role="listitem">Retrofit</span>
+    <span class="skill-tag" role="listitem">Gson</span>
+    <span class="skill-tag" role="listitem">Firebase Firestore</span>
+    <span class="skill-tag" role="listitem">Hardware Sensors (Pedometer)</span>
+    <span class="skill-tag" role="listitem">ZenQuotes REST API</span>
+    <span class="skill-tag" role="listitem">MVVM Architecture</span>
+    <span class="skill-tag" role="listitem">Coroutines &amp; Flow</span>
+    <span class="skill-tag" role="listitem">Android Studio</span>
+    <span class="skill-tag" role="listitem">GitHub</span>
+    <span class="skill-tag" role="listitem">Figma (Wireframing)</span>
+  </div>
+</section>
+
+<!-- ══════════ RESOURCES ══════════ -->
+<section id="resources">
+  <p class="section-label">References &amp; Acknowledgements</p>
+  <h2 class="section-title">Resources</h2>
+  <ul class="resource-list" aria-label="Resources and references">
+    <li>
+      <div>
+        <strong>ZenQuotes API</strong> — <a href="https://zenquotes.io" target="_blank" rel="noopener noreferrer">zenquotes.io</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">Free inspirational quotes REST API used in Project 2 for daily quote feature.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Firebase Firestore</strong> — <a href="https://firebase.google.com/docs/firestore" target="_blank" rel="noopener noreferrer">firebase.google.com</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">Real-time NoSQL cloud database powering the community board in Project 2.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Jetpack Compose Documentation</strong> — <a href="https://developer.android.com/jetpack/compose" target="_blank" rel="noopener noreferrer">developer.android.com</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">Official Android documentation referenced extensively throughout all labs and projects.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Room Persistence Library</strong> — <a href="https://developer.android.com/training/data-storage/room" target="_blank" rel="noopener noreferrer">developer.android.com/training/data-storage/room</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">Used for local mood entry persistence in Lab 5 and Project 2.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Retrofit</strong> — <a href="https://square.github.io/retrofit" target="_blank" rel="noopener noreferrer">square.github.io/retrofit</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">HTTP client library used to consume the ZenQuotes REST API in Project 2.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Material Design 3</strong> — <a href="https://m3.material.io" target="_blank" rel="noopener noreferrer">m3.material.io</a><br>
+        <span style="font-size:.82rem;color:#4a6360;">Design system used for all UI components, colour roles, and typography scales.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>AI Assistance Acknowledgement</strong><br>
+        <span style="font-size:.82rem;color:#4a6360;">Claude (Anthropic) was used during development to assist with debugging deprecation warnings (Divider → HorizontalDivider, AutoMirrored icons), resolving the AndroidManifest SanvelloApplication ClassCastException, and generating this e-Portfolio HTML. All code was reviewed, understood, and integrated by the student.</span>
+      </div>
+    </li>
+    <li>
+      <div>
+        <strong>Instructor</strong> — Dr Nazatul Aini<br>
+        <span style="font-size:.82rem;color:#4a6360;">Sincere thanks for structured lab progression and feedback that consistently pushed me to think architecturally, not just functionally.</span>
+      </div>
+    </li>
+  </ul>
+</section>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer>
+  <p><strong>Wan Nur Alya Sofhea Binti Wan Roshdee</strong></p>
+  <p>Matric No: A211867 &nbsp;·&nbsp; Software Engineering &nbsp;·&nbsp; Dr Nazatul Aini</p>
+  <p style="margin-top:.5rem;">Mobile Application Development e-Portfolio &nbsp;·&nbsp; © 2025</p>
+  <p style="margin-top:.75rem;font-size:.75rem;opacity:.45;">Built with semantic HTML5, inline CSS, and a lot of late nights 🌸</p>
+</footer>
+
+</body>
+</html>
